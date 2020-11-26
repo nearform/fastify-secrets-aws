@@ -1,0 +1,14 @@
+.DS_Store
+.clinic
+.nyc_output
+benchmarks/logs
+coverage/
+node_modules/
+tmp/
+
+npm-debug.log
+npm-error.log
+yarn-debug.log
+yarn-error.log
+
+key.json
