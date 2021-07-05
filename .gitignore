@@ -12,3 +12,4 @@ yarn-debug.log
 yarn-error.log
 
 key.json
+package-lock.json
