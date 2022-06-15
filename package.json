@@ -56,6 +56,6 @@
   },
   "dependencies": {
     "aws-sdk": "^2.799.0",
-    "fastify-secrets-core": "^1.0.1"
+    "fastify-secrets-core": "^2.0.0"
   }
 }
