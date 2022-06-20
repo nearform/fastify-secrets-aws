@@ -1,6 +1,6 @@
 # Fastify Secrets AWS
 
-![CI](https://github.com/nearform/fastify-secrets-AWS/workflows/CI/badge.svg)
+[![ci](https://github.com/nearform/fastify-secrets-aws/actions/workflows/ci.yml/badge.svg)](https://github.com/nearform/fastify-secrets-aws/actions/workflows/ci.yml)
 
 Fastify secrets plugin for [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager).
 
