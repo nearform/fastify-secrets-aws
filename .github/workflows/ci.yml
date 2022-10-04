@@ -7,9 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version-file: .nvmrc
+        node-version-file:
           - 14
           - 16
+          - 18
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
