@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     strategy:
       matrix:
         node-version:
@@ -26,9 +29,6 @@ jobs:
           role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ vars.AWS_REGION }}
       - run: npm run test:ci
-    permissions:
-      id-token: write
-      contents: read
   automerge:
     needs: build
     runs-on: ubuntu-latest
