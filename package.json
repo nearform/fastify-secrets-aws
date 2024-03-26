@@ -9,7 +9,7 @@
     "lint:staged": "lint-staged",
     "test": "tap --reporter=spec --coverage-report=html --coverage-report=text --100 --no-browser test/*.test.js test/**/*.test.js",
     "test:ci": "tap --no-color --reporter=spec --coverage-report=json --coverage-report=text --100 test/*.test.js test/**/*.test.js",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -40,7 +40,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-standard": "^5.0.0",
     "fastify": "^4.0.3",
-    "husky": "^9.0.7",
+    "husky": "^9.0.11",
     "lint-staged": "^15.0.1",
     "prettier": "^3.0.1",
     "proxyquire": "^2.1.3",
