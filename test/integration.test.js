@@ -3,7 +3,7 @@
 const { test, teardown } = require('tap')
 const uuid = require('uuid')
 const Fastify = require('fastify')
-const SecretsManager = require('aws-sdk').SecretsManager
+const { SecretsManager, DeleteSecretCommand, CreateSecretCommand } = require('@aws-sdk/client-secrets-manager')
 
 const FastifySecrets = require('../')
 
@@ -13,21 +13,21 @@ const SECRET_CONTENT = uuid.v4()
 const client = new SecretsManager()
 
 function createSecret() {
-  return client
-    .createSecret({
+  return client.send(
+    new CreateSecretCommand({
       Name: SECRET_NAME,
       SecretString: SECRET_CONTENT
     })
-    .promise()
+  )
 }
 
 teardown(function deleteSecret() {
-  return client
-    .deleteSecret({
+  return client.send(
+    new DeleteSecretCommand({
       SecretId: SECRET_NAME,
       ForceDeleteWithoutRecovery: true
     })
-    .promise()
+  )
 })
 
 test('integration', async (t) => {
