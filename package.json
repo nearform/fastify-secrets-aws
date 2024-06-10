@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/nearform/fastify-secrets-aws#readme",
   "engines": {
-    "node": ">= 12.13.0"
+    "node": ">=18"
   },
   "devDependencies": {
     "eslint": "^8.18.0",
