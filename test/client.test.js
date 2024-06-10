@@ -4,19 +4,24 @@ const { test, beforeEach } = require('tap')
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
 
-class Stub {
-  getSecretValue() {}
+class SecretsManagerClientStub {
+  send() {}
+}
+class GetSecretValueCommandStub {
+  constructor(SecretId) {
+    this.input = SecretId
+  }
 }
 
 const getSecretValuePromise = sinon.stub()
+const GSVCStub = sinon.stub(GetSecretValueCommandStub)
 
-const getSecretValue = sinon.stub(Stub.prototype, 'getSecretValue').returns({
-  promise: getSecretValuePromise
-})
+const SMStub = sinon.stub(SecretsManagerClientStub.prototype, 'send').resolves({ SecretString: 'secret payload' })
 
 const AwsClient = proxyquire('../lib/client', {
-  'aws-sdk': {
-    SecretsManager: Stub
+  '@aws-sdk/client-secrets-manager': {
+    GetSecretValueCommand: GetSecretValueCommandStub,
+    SecretsManagerClient: SecretsManagerClientStub
   }
 })
 
@@ -28,22 +33,14 @@ test('get', (t) => {
   t.plan(3)
 
   t.test('SecretString', async (t) => {
-    t.plan(3)
+    t.plan(4)
 
     const client = new AwsClient()
-    getSecretValuePromise.resolves({
-      SecretString: 'secret payload'
-    })
 
     const secret = await client.get('secret/name')
-
-    t.ok(getSecretValue.called, 'calls getSecretValue')
-    t.ok(
-      getSecretValue.calledWith({
-        SecretId: 'secret/name'
-      }),
-      'provides name as SecretId to getSecretValue'
-    )
+    t.ok(GSVCStub.call, 'new instance of GetSecretValueCommand')
+    t.ok(SMStub.called, 'calls send')
+    t.ok(SMStub.calledWith(sinon.match({ input: { SecretId: 'secret/name' } })), 'provides name as SecretId to send')
     t.equal(secret, 'secret payload', 'extracts SecretString')
   })
 
@@ -51,17 +48,12 @@ test('get', (t) => {
     t.plan(3)
 
     const client = new AwsClient()
-    getSecretValuePromise.resolves({
-      SecretBinary: Buffer.from('secret payload').toString('base64')
-    })
 
     const secret = await client.get('secret/name')
 
-    t.ok(getSecretValue.called, 'calls getSecretValue')
+    t.ok(SMStub.called, 'calls getSecretValue')
     t.ok(
-      getSecretValue.calledWith({
-        SecretId: 'secret/name'
-      }),
+      SMStub.calledWith(sinon.match({ input: { SecretId: 'secret/name' } })),
       'provides name as SecretId to getSecretValue'
     )
     t.equal(secret, 'secret payload', 'extracts SecretBinary')
@@ -71,7 +63,7 @@ test('get', (t) => {
     t.plan(1)
     const client = new AwsClient()
 
-    getSecretValuePromise.rejects(new Error())
+    SMStub.rejects(new Error())
 
     const promise = client.get('secret/name')
 
