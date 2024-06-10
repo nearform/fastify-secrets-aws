@@ -13,10 +13,9 @@ class GetSecretValueCommandStub {
   }
 }
 
-const getSecretValuePromise = sinon.stub()
 const GSVCStub = sinon.stub(GetSecretValueCommandStub)
 
-const SMStub = sinon.stub(SecretsManagerClientStub.prototype, 'send').resolves({ SecretString: 'secret payload' })
+const SMStub = sinon.stub(SecretsManagerClientStub.prototype, 'send')
 
 const AwsClient = proxyquire('../lib/client', {
   '@aws-sdk/client-secrets-manager': {
@@ -26,7 +25,7 @@ const AwsClient = proxyquire('../lib/client', {
 })
 
 beforeEach(async () => {
-  getSecretValuePromise.reset()
+  SMStub.reset()
 })
 
 test('get', (t) => {
@@ -34,8 +33,8 @@ test('get', (t) => {
 
   t.test('SecretString', async (t) => {
     t.plan(4)
-
     const client = new AwsClient()
+    SMStub.resolves({ SecretString: 'secret payload' })
 
     const secret = await client.get('secret/name')
     t.ok(GSVCStub.call, 'new instance of GetSecretValueCommand')
@@ -46,16 +45,13 @@ test('get', (t) => {
 
   t.test('SecretBinary', async (t) => {
     t.plan(3)
-
     const client = new AwsClient()
-
+    SMStub.resolves({
+      SecretBinary: Buffer.from('secret payload').toString('base64')
+    })
     const secret = await client.get('secret/name')
-
-    t.ok(SMStub.called, 'calls getSecretValue')
-    t.ok(
-      SMStub.calledWith(sinon.match({ input: { SecretId: 'secret/name' } })),
-      'provides name as SecretId to getSecretValue'
-    )
+    t.ok(SMStub.called, 'calls send')
+    t.ok(SMStub.calledWith(sinon.match({ input: { SecretId: 'secret/name' } })), 'provides name as SecretId to send')
     t.equal(secret, 'secret payload', 'extracts SecretBinary')
   })
 
