@@ -1,5 +1,5 @@
 {
-  "extends": ["standard", "plugin:prettier/recommended"],
+  "extends": ["plugin:prettier/recommended"],
   "env": {
     "browser": false,
     "commonjs": true,
