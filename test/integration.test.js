@@ -1,6 +1,6 @@
 'use strict'
 
-const { test, teardown } = require('tap')
+const { test, after } = require('node:test')
 const uuid = require('uuid')
 const Fastify = require('fastify')
 const { SecretsManager, DeleteSecretCommand, CreateSecretCommand } = require('@aws-sdk/client-secrets-manager')
@@ -21,7 +21,7 @@ function createSecret() {
   )
 }
 
-teardown(function deleteSecret() {
+after(function deleteSecret() {
   return client.send(
     new DeleteSecretCommand({
       SecretId: SECRET_NAME,
@@ -47,11 +47,5 @@ test('integration', async (t) => {
 
   await fastify.ready()
 
-  t.has(
-    fastify.secrets,
-    {
-      test: SECRET_CONTENT
-    },
-    'decorates fastify with secret content'
-  )
+  t.assert.deepStrictEqual(fastify.secrets.test, SECRET_CONTENT, 'decorates fastify with secret content')
 })
