@@ -1,6 +1,7 @@
 'use strict'
 
-const { test, beforeEach } = require('tap')
+const { test, beforeEach } = require('node:test')
+
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
 
@@ -37,10 +38,13 @@ test('get', (t) => {
     SMStub.resolves({ SecretString: 'secret payload' })
 
     const secret = await client.get('secret/name')
-    t.ok(GSVCStub.call, 'new instance of GetSecretValueCommand')
-    t.ok(SMStub.called, 'calls send')
-    t.ok(SMStub.calledWith(sinon.match({ input: { SecretId: 'secret/name' } })), 'provides name as SecretId to send')
-    t.equal(secret, 'secret payload', 'extracts SecretString')
+    t.assert.ok(GSVCStub.call, 'new instance of GetSecretValueCommand')
+    t.assert.ok(SMStub.called, 'calls send')
+    t.assert.ok(
+      SMStub.calledWith(sinon.match({ input: { SecretId: 'secret/name' } })),
+      'provides name as SecretId to send'
+    )
+    t.assert.equal(secret, 'secret payload', 'extracts SecretString')
   })
 
   t.test('SecretBinary', async (t) => {
@@ -50,9 +54,12 @@ test('get', (t) => {
       SecretBinary: Buffer.from('secret payload').toString('base64')
     })
     const secret = await client.get('secret/name')
-    t.ok(SMStub.called, 'calls send')
-    t.ok(SMStub.calledWith(sinon.match({ input: { SecretId: 'secret/name' } })), 'provides name as SecretId to send')
-    t.equal(secret, 'secret payload', 'extracts SecretBinary')
+    t.assert.ok(SMStub.called, 'calls send')
+    t.assert.ok(
+      SMStub.calledWith(sinon.match({ input: { SecretId: 'secret/name' } })),
+      'provides name as SecretId to send'
+    )
+    t.assert.equal(secret, 'secret payload', 'extracts SecretBinary')
   })
 
   t.test('sdk error', async (t) => {
@@ -63,6 +70,6 @@ test('get', (t) => {
 
     const promise = client.get('secret/name')
 
-    await t.rejects(promise, 'throws error')
+    await t.assert.rejects(promise, 'throws error')
   })
 })

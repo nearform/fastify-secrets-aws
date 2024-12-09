@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 18
           - 20
           - 22
     steps:
@@ -28,7 +27,7 @@ jobs:
         with:
           role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ vars.AWS_REGION }}
-      - run: npm run test:ci
+      - run: npm run test
   automerge:
     needs: build
     runs-on: ubuntu-latest
