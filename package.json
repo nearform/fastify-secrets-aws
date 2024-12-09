@@ -53,6 +53,6 @@
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.588.0",
-    "fastify-secrets-core": "^2.0.0"
+    "fastify-secrets-core": "^3.0.0"
   }
 }
