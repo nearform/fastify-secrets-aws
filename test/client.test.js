@@ -29,11 +29,8 @@ beforeEach(async () => {
   SMStub.reset()
 })
 
-test('get', (t) => {
-  t.plan(3)
-
-  t.test('SecretString', async (t) => {
-    t.plan(4)
+test('get', async (t) => {
+  await t.test('SecretString', async (t) => {
     const client = new AwsClient()
     SMStub.resolves({ SecretString: 'secret payload' })
 
@@ -47,8 +44,7 @@ test('get', (t) => {
     t.assert.equal(secret, 'secret payload', 'extracts SecretString')
   })
 
-  t.test('SecretBinary', async (t) => {
-    t.plan(3)
+  await t.test('SecretBinary', async (t) => {
     const client = new AwsClient()
     SMStub.resolves({
       SecretBinary: Buffer.from('secret payload').toString('base64')
@@ -62,8 +58,7 @@ test('get', (t) => {
     t.assert.equal(secret, 'secret payload', 'extracts SecretBinary')
   })
 
-  t.test('sdk error', async (t) => {
-    t.plan(1)
+  await t.test('sdk error', async (t) => {
     const client = new AwsClient()
 
     SMStub.rejects(new Error())
