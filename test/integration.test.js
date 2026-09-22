@@ -1,6 +1,7 @@
 'use strict'
 
 const { test, after } = require('node:test')
+
 const uuid = require('uuid')
 const Fastify = require('fastify')
 const { SecretsManager, DeleteSecretCommand, CreateSecretCommand } = require('@aws-sdk/client-secrets-manager')
